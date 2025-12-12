@@ -1,6 +1,11 @@
 import json
+import sqlite3
+from datetime import datetime
 from collections import defaultdict, Counter
 from pathlib import Path
+
+
+DB_PATH = Path(__file__).parents[1] / "common" / "localboost.db"
 
 # Find the project root (two levels up from this file)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -165,6 +170,38 @@ def run_intent_engine():
         print(f"  Churn Score:  {churn_score}")
         print(f"  Next Action:  {action}")
         print("-" * 40)
+
+    
+    output_path = Path(__file__).parent / "intent_results.json"
+    with output_path.open("w") as f:
+        json.dump(results, f, indent=2)
+
+    print(f"\nSaved intent results to: {output_path}")
+    save_to_database(results)
+
+
+
+
+def save_to_database(results):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+
+    for r in results:
+        cur.execute("""
+            INSERT INTO analytics (customer_id, intent_score, churn_score, next_best_action, last_updated)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            r["customer_id"],
+            r["intent_score"],
+            r["churn_score"],
+            r["next_best_action"],
+            datetime.utcnow().isoformat()
+        ))
+
+    conn.commit()
+    conn.close()
+    print("Saved analytics to SQLite database.")
+
 
     # Write results to a JSON file for the dashboard later
     output_path = Path(__file__).parent / "intent_results.json"
