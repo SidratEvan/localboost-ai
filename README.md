@@ -1,153 +1,153 @@
 LocalBoost AI — Customer Intent Pulse
 
-This is a small project I built to learn how real platforms track customer behavior and use it to help businesses understand what their customers might do next.
+This is a small project I built to understand how real platforms track customer behavior and turn that data into helpful insights for small businesses. The system simulates customer activity, analyzes it, saves the results into a database, exposes it through an API, and then displays everything on a simple dashboard.
 
-The idea is simple:
+The whole idea is to make a tiny version of how real companies (like SaaS/AI platforms) understand customer intent and churn.
 
-simulate customer activity
-
-analyze the activity
-
-give each customer an “intent score” (how likely they are to buy)
-
-give a “churn score” (how likely they are to leave)
-
-show a “next best action”
-
-display everything on a small dashboard
-
-I wanted to make something that feels like a tiny version of a real system used by companies that help small businesses grow.
 
 What this project does
 1. Event Simulator (Python)
 
-Creates fake customer events like:
+Creates fake customer activity such as:
 
-page views
+-page views
 
-product views
+-product views
 
-add to cart
+-add-to-cart
 
-purchases
+-purchases
 
-reviews
+r-eviews
 
-email opens
+-email opens / clicks
 
-These events get saved into a JSON file.
+Each event is written line-by-line into a JSON file called simulated_events.json.
 
-2. Intent Engine (Python)
 
-Reads the events and calculates:
+2. Intent Engine (Python + SQLite)
 
-intent score
+The intent engine reads all the simulated events and calculates:
 
-churn score
+-intent score (how likely a customer is to buy)
 
-next best action
+-churn score (how likely they are to leave)
 
-The math is simple on purpose. I just used weights and conditions to make it understandable and beginner-friendly.
+-next best action (a simple recommendation)
 
-The results are saved into intent_results.json.
+The scoring model is intentionally simple and beginner-friendly.
+After the analysis:
+
+-The results are saved into intent_results.json
+
+-The same results are also written into a real SQLite database (localboost.db)
+
+-The database has two tables (defined in backend/common/models.sql):
+
+--events
+
+--analytics
+
 
 3. API Gateway (Go)
 
-I made a small Go HTTP server with two routes:
+I built a small Go HTTP server that reads the analytics results from the SQLite database and exposes them through API endpoints:
+GET /healthz     -> returns OK
+GET /intent      -> returns analytics rows from SQLite as JSON
 
-GET /healthz    -> returns OK  
-GET /intent     -> returns the intent results as JSON  
+The Go service acts as a mini microservice that the frontend or other systems can call.
 
 
-This makes the project feel like a real backend service.
 
 4. Dashboard (HTML + JavaScript)
 
-A simple webpage that:
+The dashboard is a simple webpage that:
 
-calls the Go API
+-calls the Go /intent API
 
-loads the intent data
+-loads customer intent + churn data
 
-shows a table with:
+-displays a clean table showing:
 
-customer ID
+--customer ID
 
-intent score
+--intent score
 
-churn score
+--churn score
 
-next best action
+--next best action
 
-The colors change depending on the score so it’s easy to read.
+The scores have color badges so it’s easier to read at a glance.
 
-Example screenshot:
+This turns the backend data into something visual.
 
 
-
-🏗️ How the pieces connect
+How the pieces connect:
 [Python Event Simulator] → simulated_events.json
-        ↓
-[Python Intent Engine] → intent_results.json
-        ↓
-[Go API Gateway] → serves /intent
-        ↓
-[Dashboard] → shows everything visually
+            ↓
+[Python Intent Engine] → intent_results.json + SQLite database
+            ↓
+[Go API Gateway] → reads from SQLite and serves /intent
+            ↓
+[Dashboard] → fetches /intent and shows it visually
 
 
 
-
-How to run it
-1. Run the simulator
+How to run it:
+1. Generate customer events
 cd simulator
 python event_simulator.py
-
-2. Run the intent engine
+2. Analyze events (writes to JSON + SQLite)
 cd backend/analytics
 python intent_engine.py
-
-3. Run the Go API server
+3. Start the Go API server
 cd backend/api_gateway
 go run main.go
-
 4. Open the dashboard
-
-Open this file in a browser:
-
+Open this file in any browser:
 frontend/dashboard/index.html
+Then click Refresh Data to load the latest customer analytics.
 
 
-Click Refresh Data, and you’ll see the customer scores.
 
-Why I built this
+Why I built this:
 
-I wanted to practice:
+-I wanted hands-on practice with:
 
-Python scripting
+-Python scripting
 
-Go backend basics
+-Go backend basics
 
-frontend + API calls
+-SQL databases (SQLite)
 
-simple data analysis
+-simple analytics logic
 
-working with multiple folders/services
+-working with multiple folders/services
 
-thinking about how real systems fit together
+-connecting everything through an API
 
-This project helped me understand how customer analytics works and how different parts of a platform communicate.
+-showing the final output on a webpage
 
-Future improvements (if I continue)
+This project helped me understand how customer analytics systems work behind the scenes and how different parts of a platform communicate with each other.
 
-use a real database instead of JSON
 
-use real Pub/Sub message passing
 
-use React for the dashboard
+Future improvements
 
-try deploying the Go API to the cloud
+-If I continue this project, I want to:
 
-improve the scoring model
+-switch from SQLite to PostgreSQL
+
+-stream events using Pub/Sub
+
+-add more advanced scoring models
+
+-improve the UI using React
+
+-deploy the Go API to the cloud
+
+-visualize trends over time
+
 
 Author
 
@@ -157,4 +157,5 @@ GitHub: SidratEvan
 
 Summary
 
-This project is beginner-friendly, but it shows how multiple services—Python, Go, and frontend—can work together to create a small analytics system.
+This project is beginner-friendly, but it shows how Python, Go, SQL, and a frontend dashboard can work together to build a small analytics system.
+It simulates a real-world flow: events → analytics → database → API → dashboard, which is commonly used in modern SaaS and AI platforms.

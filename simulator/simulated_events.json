@@ -18,3 +18,13 @@
 {"customer_id": "c004", "event_type": "add_to_cart", "timestamp": "2025-12-12T12:30:56.804305"}
 {"customer_id": "c001", "event_type": "email_clicked", "timestamp": "2025-12-12T12:30:57.306300"}
 {"customer_id": "c002", "event_type": "email_opened", "timestamp": "2025-12-12T12:30:57.808609"}
+{"customer_id": "c002", "event_type": "product_view", "timestamp": "2025-12-12T13:21:50.094542"}
+{"customer_id": "c004", "event_type": "add_to_cart", "timestamp": "2025-12-12T13:21:50.595770"}
+{"customer_id": "c004", "event_type": "review_posted", "timestamp": "2025-12-12T13:21:51.097009"}
+{"customer_id": "c004", "event_type": "review_posted", "timestamp": "2025-12-12T13:21:51.598544"}
+{"customer_id": "c002", "event_type": "email_clicked", "timestamp": "2025-12-12T13:21:52.100558"}
+{"customer_id": "c001", "event_type": "review_posted", "timestamp": "2025-12-12T13:21:52.602573"}
+{"customer_id": "c004", "event_type": "review_posted", "timestamp": "2025-12-12T13:21:53.103802"}
+{"customer_id": "c002", "event_type": "review_posted", "timestamp": "2025-12-12T13:21:53.606445"}
+{"customer_id": "c001", "event_type": "page_view", "timestamp": "2025-12-12T13:21:54.108520"}
+{"customer_id": "c001", "event_type": "email_opened", "timestamp": "2025-12-12T13:21:54.610462"}
