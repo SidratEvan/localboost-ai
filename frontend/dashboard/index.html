@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LocalBoost AI – Customer Intent Pulse</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #fbbf24;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #020617;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #1f2937;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .score-high {
+      background: #15803d;
+      color: #f9fafb;
+    }
+
+    .score-medium {
+      background: #ca8a04;
+      color: #111827;
+    }
+
+    .score-low {
+      background: #b91c1c;
+      color: #f9fafb;
+    }
+
+    .status-bar {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .error {
+      color: #fca5a5;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LocalBoost AI – Customer Intent Pulse</h1>
+  <div class="subtitle">
+    Real-time summary of customer intent, churn risk, and next best actions.
+  </div>
+
+  <button onclick="loadIntent()">Refresh Data</button>
+  <div id="status" class="status-bar">Click "Refresh Data" to load the latest results.</div>
+  <div id="error" class="error"></div>
+
+  <table id="intent-table">
+    <thead>
+      <tr>
+        <th>Customer ID</th>
+        <th>Intent Score</th>
+        <th>Churn Risk</th>
+        <th>Next Best Action</th>
+      </tr>
+    </thead>
+    <tbody id="intent-body">
+      <!-- rows get filled by JS -->
+    </tbody>
+  </table>
+
+  <script>
+    function scoreClass(score) {
+      if (score >= 70) return "score-high";
+      if (score >= 40) return "score-medium";
+      return "score-low";
+    }
+
+    async function loadIntent() {
+      const statusEl = document.getElementById("status");
+      const errorEl = document.getElementById("error");
+      const tbody = document.getElementById("intent-body");
+
+      statusEl.textContent = "Loading intent data...";
+      errorEl.textContent = "";
+      tbody.innerHTML = "";
+
+      try {
+        const response = await fetch("http://localhost:8080/intent");
+        if (!response.ok) {
+          throw new Error("API returned " + response.status);
+        }
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          statusEl.textContent = "No intent results available. Did you run the simulator and intent engine?";
+          return;
+        }
+
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+
+          const tdCustomer = document.createElement("td");
+          tdCustomer.textContent = row.customer_id || row.CustomerID || "unknown";
+
+          const tdIntent = document.createElement("td");
+          const spanIntent = document.createElement("span");
+          spanIntent.textContent = row.intent_score ?? row.IntentScore ?? 0;
+          spanIntent.className = "score-badge " + scoreClass(spanIntent.textContent);
+          tdIntent.appendChild(spanIntent);
+
+          const tdChurn = document.createElement("td");
+          const spanChurn = document.createElement("span");
+          spanChurn.textContent = row.churn_score ?? row.ChurnScore ?? 0;
+          spanChurn.className = "score-badge " + scoreClass(100 - spanChurn.textContent);
+          tdChurn.appendChild(spanChurn);
+
+          const tdAction = document.createElement("td");
+          tdAction.textContent = row.next_best_action || row.NextBestAction || "";
+
+          tr.appendChild(tdCustomer);
+          tr.appendChild(tdIntent);
+          tr.appendChild(tdChurn);
+          tr.appendChild(tdAction);
+
+          tbody.appendChild(tr);
+        });
+
+        statusEl.textContent = "Last updated at " + new Date().toLocaleTimeString();
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = "Failed to load data from API. Is the Go server running?";
+        statusEl.textContent = "Unable to refresh data.";
+      }
+    }
+  </script>
+</body>
+</html>
