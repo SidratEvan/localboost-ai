@@ -96,19 +96,29 @@ This turns the backend data into something visual.
 ## How to run it:
 ---
 1. Generate customer events
+
 cd simulator
 python event_simulator.py
+
 2. Analyze events (writes to JSON + SQLite)
+
 cd backend/analytics
 python intent_engine.py
+
 3. Start the Go API server
+
 cd backend/api_gateway
 go run main.go
+
 4. Open the dashboard
+
 Open this file in any browser:
+
 frontend/dashboard/index.html
+
 Then click Refresh Data to load the latest customer analytics.
 
+<img width="1920" height="1080" alt="dashboard" src="https://github.com/user-attachments/assets/22bf6cc8-892d-4408-8732-6f7830a4809c" />
 
 
 ## Why I built this:
