@@ -2,6 +2,11 @@ import random
 import json
 import time
 from datetime import datetime
+from pathlib import Path
+
+
+OUT_FILE = Path(__file__).parent / "simulated_events.json"
+
 
 # Simple list of fake customers
 CUSTOMERS = ["c001", "c002", "c003", "c004"]
@@ -34,8 +39,9 @@ def run_simulator():
         print("Generated Event:", event)
 
         # Save events to a JSON file (so your AI engine can read it later)
-        with open("simulated_events.json", "a") as f:
+        with OUT_FILE.open("a") as f:
             f.write(json.dumps(event) + "\n")
+
 
         time.sleep(0.5)  # pause to simulate real-time behavior
 
