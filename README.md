@@ -1,13 +1,13 @@
-LocalBoost AI — Customer Intent Pulse
+# LocalBoost AI — Customer Intent Pulse
 
 This is a small project I built to understand how real platforms track customer behavior and turn that data into helpful insights for small businesses. The system simulates customer activity, analyzes it, saves the results into a database, exposes it through an API, and then displays everything on a simple dashboard.
 
 The whole idea is to make a tiny version of how real companies (like SaaS/AI platforms) understand customer intent and churn.
 
 
-What this project does
-1. Event Simulator (Python)
-
+## What this project does
+### 1. Event Simulator (Python)
+---
 Creates fake customer activity such as:
 
 -page views
@@ -25,8 +25,8 @@ r-eviews
 Each event is written line-by-line into a JSON file called simulated_events.json.
 
 
-2. Intent Engine (Python + SQLite)
-
+### 2. Intent Engine (Python + SQLite)
+---
 The intent engine reads all the simulated events and calculates:
 
 -intent score (how likely a customer is to buy)
@@ -49,8 +49,8 @@ After the analysis:
 --analytics
 
 
-3. API Gateway (Go)
-
+### 3. API Gateway (Go)
+---
 I built a small Go HTTP server that reads the analytics results from the SQLite database and exposes them through API endpoints:
 GET /healthz     -> returns OK
 GET /intent      -> returns analytics rows from SQLite as JSON
@@ -59,8 +59,8 @@ The Go service acts as a mini microservice that the frontend or other systems ca
 
 
 
-4. Dashboard (HTML + JavaScript)
-
+### 4. Dashboard (HTML + JavaScript)
+---
 The dashboard is a simple webpage that:
 
 -calls the Go /intent API
@@ -81,8 +81,8 @@ The scores have color badges so it’s easier to read at a glance.
 
 This turns the backend data into something visual.
 
-
-How the pieces connect:
+---
+### How the pieces connect:
 [Python Event Simulator] → simulated_events.json
             ↓
 [Python Intent Engine] → intent_results.json + SQLite database
@@ -93,7 +93,8 @@ How the pieces connect:
 
 
 
-How to run it:
+## How to run it:
+---
 1. Generate customer events
 cd simulator
 python event_simulator.py
@@ -110,8 +111,8 @@ Then click Refresh Data to load the latest customer analytics.
 
 
 
-Why I built this:
-
+## Why I built this:
+---
 -I wanted hands-on practice with:
 
 -Python scripting
@@ -132,8 +133,8 @@ This project helped me understand how customer analytics systems work behind the
 
 
 
-Future improvements
-
+##Future improvements
+---
 -If I continue this project, I want to:
 
 -switch from SQLite to PostgreSQL
@@ -149,13 +150,15 @@ Future improvements
 -visualize trends over time
 
 
-Author
-
+## Author
+---
 SK Sidratul Islam Priyo
+
 University of Saskatchewan
+
 GitHub: SidratEvan
 
-Summary
-
+## Summary
+---
 This project is beginner-friendly, but it shows how Python, Go, SQL, and a frontend dashboard can work together to build a small analytics system.
 It simulates a real-world flow: events → analytics → database → API → dashboard, which is commonly used in modern SaaS and AI platforms.
