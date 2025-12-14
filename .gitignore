@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# Generated runtime data (do not commit)
+simulator/simulated_events.json
+backend/common/localboost.db
+backend/analytics/intent_results.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
